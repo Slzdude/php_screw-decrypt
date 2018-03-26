@@ -1,1 +1,1 @@
-<?php phpinfo();?>
+	PM9SCREW	¹ÿŒ>@	ÖoB‹óbŒ•D´oû9:n

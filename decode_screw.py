@@ -4,7 +4,7 @@ import os
 import shutil
 import zlib
 
-PM9SCREW = '\tPM9SCREW\t'
+PM9SCREW = b'\tPM9SCREW\t'
 PM9SCREW_LEN = len(PM9SCREW)
 pm9screw_mycryptkey = [11152, 368, 192, 1281, 62]
 cryptkey_len = len(pm9screw_mycryptkey)
