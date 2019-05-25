@@ -11,7 +11,7 @@ cryptkey_len = len(pm9screw_mycryptkey)
 
 
 def decrypt(path, write=True):
-    data = open(path, 'rb').read()
+    data = bytearray(open(path, 'rb').read())
 
     if len(data) < PM9SCREW_LEN:
         return False
@@ -19,16 +19,18 @@ def decrypt(path, write=True):
     if data[:PM9SCREW_LEN] != PM9SCREW:
         return False
     data = data[PM9SCREW_LEN:]
-    datalen = len(data)
-    out = ''
-    for i in range(datalen):
-        tmp = chr((pm9screw_mycryptkey[(datalen - i) % cryptkey_len] ^ (~ord(data[i]))) % 256)
-        out += tmp
-
-    new = zlib.decompress(out)
+    data_len = len(data)
+    out = bytearray(data_len)
+    for i in range(data_len):
+        out[i] = (pm9screw_mycryptkey[(data_len - i) % cryptkey_len]
+                  ^ (~data[i])) % 256
+    try:
+        new = zlib.decompress(out)
+    except TypeError:
+        new = zlib.decompress(bytes(out)).encode()
     if write:
         shutil.move(path, path + ".bak")
-        open(path, 'w').write(new)
+        open(path, 'wb').write(new)
     else:
         print(new)
 
@@ -44,7 +46,7 @@ def multi_decrypt(path):
         for fpathe, dirs, fs in folder:
             for f in fs:
                 if f.endswith('.php'):
-                    decrypt(os.path.join(fpathe, f), False)
+                    decrypt(os.path.join(fpathe, f), True)
     else:
         decrypt(path)
 
